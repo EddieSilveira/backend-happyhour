@@ -1,0 +1,19 @@
+{
+  "name": "backend-happyhour",
+  "version": "1.0.0",
+  "description": "Backend em Node.JS integrado ao MongoDB para o gerenciamento de uma adega.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "backend",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Eddie Silveira",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

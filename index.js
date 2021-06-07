@@ -8,7 +8,7 @@ const rotasProduto = require('./routes/Produto');
 const rotasUsuario = require('./routes/Usuario');
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 8000;
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');

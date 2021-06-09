@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
   try {
     const usuario = await Usuario.find();
     res.json(usuario);
+    console.log(usuario);
   } catch (err) {
     res.status(500).send({
       errors: [{ message: 'Não foi possível obter os usuários!' }],

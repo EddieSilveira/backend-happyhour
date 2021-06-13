@@ -4,8 +4,7 @@ require('dotenv').config();
 const InicializaMongoServer = require('./config/db');
 InicializaMongoServer();
 const jwt = require('jsonwebtoken');
-//const SECRET = tokenSecret;
-const tokenSecret = 'nome_sensato';
+const tokenSecret = process.env.SECRET;
 const Usuario = require('./model/Usuario');
 
 const rotasCategoria = require('./routes/Categoria');

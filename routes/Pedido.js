@@ -79,16 +79,22 @@ router.delete('/:id', async (req, res) => {
 //Altera os dados do pedido informado
 router.put('/', async (req, res) => {
   const errors = validationResult(req);
+  let produto = {};
+  req.body.produtos.forEach((item) => (produto = item));
+
   if (!errors.isEmpty()) {
     return res.status(400).json({
       errors: errors.array(),
     });
   }
-  let dados = req.body;
+  let { nome, quantidade, preco } = produto;
+
   await Pedido.findByIdAndUpdate(
     req.body._id,
     {
-      $set: dados,
+      $set: nome,
+      $set: quantidade,
+      $set: preco,
     },
     { new: true },
   )

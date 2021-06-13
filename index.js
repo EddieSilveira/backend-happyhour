@@ -4,7 +4,8 @@ require('dotenv').config();
 const InicializaMongoServer = require('./config/db');
 InicializaMongoServer();
 const jwt = require('jsonwebtoken');
-const SECRET = process.env.SECRET;
+//const SECRET = tokenSecret;
+const tokenSecret = 'nome_sensato';
 const Usuario = require('./model/Usuario');
 
 const rotasCategoria = require('./routes/Categoria');
@@ -41,7 +42,7 @@ function verificaJWT(req, res, next) {
   if (!token)
     return res.status(401).json({ auth: false, message: 'No token provided.' });
 
-  jwt.verify(token, process.env.SECRET, function (err, decoded) {
+  jwt.verify(token, tokenSecret, function (err, decoded) {
     if (err)
       return res
         .status(500)
@@ -80,11 +81,10 @@ app.post('/cadastro', async (req, res) => {
 //Autenticação
 app.post('/login', async (req, res, next) => {
   const usuarios = await Usuario.find();
-  console.log(req);
   usuarios.forEach((usuario) => {
     if (req.body.email === usuario.email && req.body.senha === usuario.senha) {
       const id = usuario._id;
-      const token = jwt.sign({ id }, process.env.SECRET, {
+      const token = jwt.sign({ id }, tokenSecret, {
         expiresIn: 999,
       });
 

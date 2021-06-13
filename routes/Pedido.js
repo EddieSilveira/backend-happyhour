@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-//Inclui um novo produto
+//Inclui um novo pedido
 router.post('/', async (req, res) => {
   const errors = [];
   // if (!errors.isEmpty()) {

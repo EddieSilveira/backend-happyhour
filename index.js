@@ -80,13 +80,14 @@ app.post('/cadastro', async (req, res) => {
 //Autenticação
 app.post('/login', async (req, res, next) => {
   const usuarios = await Usuario.find();
+  console.log(req);
   usuarios.forEach((usuario) => {
     if (req.body.email === usuario.email && req.body.senha === usuario.senha) {
       const id = usuario._id;
       const token = jwt.sign({ id }, process.env.SECRET, {
         expiresIn: 999,
       });
-      console.log(usuario);
+
       return res.json({ auth: true, token: token, usuario: usuario });
     } else {
       return res.status(500).json({ message: 'Login Inválido!' });
@@ -100,8 +101,8 @@ app.post('/logout', function (req, res) {
 
 app.use('/categorias', rotasCategoria);
 app.use('/produtos', rotasProduto);
-app.use('/usuarios', verificaJWT, rotasUsuario);
 app.use('/pedido', rotasPedido);
+app.use('/usuarios', verificaJWT, rotasUsuario);
 
 app.use(function (req, res) {
   res.status(404).json({

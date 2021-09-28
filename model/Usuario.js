@@ -6,6 +6,7 @@ const UsuarioSchema = mongoose.Schema(
     cpf: { type: String },
     email: { type: String },
     senha: { type: String },
+    nivelAcesso: { type: Number },
     status: { type: String, enum: ['ativo', 'inativo'], default: 'ativo' },
     foto: {
       originalName: { type: String },

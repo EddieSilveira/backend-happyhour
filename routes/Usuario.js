@@ -91,7 +91,7 @@ router.delete('/:id', async (req, res) => {
     });
 });
 
-//Altera os dados do usuario informada
+//Altera os dados do usuario informado
 router.put('/', validaUsuario, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

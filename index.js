@@ -52,9 +52,10 @@ function verificaJWT(req, res, next) {
   });
 }
 
-//Inclui uma novo usuário
+//Inclui um novo usuário
 app.post('/cadastro', async (req, res) => {
   errors = [];
+  console.log(req.body);
   //Verifica se o usuário já existe
   const { nome, cpf, email, senha } = req.body;
   let usuario = await Usuario.findOne({ nome });
@@ -68,6 +69,7 @@ app.post('/cadastro', async (req, res) => {
     });
   try {
     let usuario = new Usuario(req.body);
+    usuario.nivelAcesso = 1;
     await usuario.save();
     res.send(usuario);
   } catch (err) {
@@ -78,20 +80,56 @@ app.post('/cadastro', async (req, res) => {
 });
 
 //Autenticação
-app.post('/login', async (req, res, next) => {
+app.post('/auth', async (req, res, next) => {
   const usuarios = await Usuario.find();
-  usuarios.forEach((usuario) => {
-    if (req.body.email === usuario.email && req.body.senha === usuario.senha) {
-      const id = usuario._id;
-      const token = jwt.sign({ id }, tokenSecret, {
+  const usuario = usuarios.find(
+    (usuario) =>
+      usuario.email === req.body.email || usuario.senha === req.body.senha,
+  );
+
+  if (!usuario)
+    return res.status(400).send('Não foi possível encontrar o usuário!');
+
+  try {
+    if (
+      req.body.email === usuario.email &&
+      req.body.password === usuario.senha
+    ) {
+      const userAtivo = {
+        id: usuario._id,
+        email: usuario.email,
+        nome: usuario.nome,
+        cpf: usuario.cpf,
+        nivelAcesso: usuario.nivelAcesso,
+        status: usuario.status,
+        createdAt: usuario.createdAt,
+      };
+      const token = jwt.sign(userAtivo, tokenSecret, {
         expiresIn: 999,
       });
-
-      return res.json({ auth: true, token: token, usuario: usuario });
+      return res.json({ auth: true, token: token });
     } else {
       return res.status(500).json({ message: 'Login Inválido!' });
     }
-  });
+  } catch (e) {
+    res.status(500).send({ message: `Erro ${e}` });
+  }
+
+  // usuarios.forEach((usuario) => {
+  //   if (
+  //     req.body.email === usuario.email &&
+  //     req.body.password === usuario.senha
+  //   ) {
+  //     const id = usuario._id;
+  //     const token = jwt.sign({ id }, tokenSecret, {
+  //       expiresIn: 999,
+  //     });
+  //     console.log(usuario)
+  //     return res.json({ auth: true, token: token, usuario: usuario });
+  //   } else {
+  //     return res.status(500).json({ message: 'Login Inválido!' });
+  //   }
+  // });
 });
 
 app.post('/logout', function (req, res) {

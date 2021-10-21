@@ -2,20 +2,26 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 
-//Definindo pasta padrão de upload
-const upload = multer({
-  dest: './public/uploads',
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/uploads');
+  },
+  filename: function (req, file, cb) {
+    if (file.mimetype === 'image/jpeg') {
+      cb(null, Date.now() + '.jpg');
+    }
+    if (file.mimetype === 'image/png') {
+      cb(null, Date.now() + '.png');
+    }
+  },
 });
 
-//Salvar a imagem recebida via upload
-router.post('/', upload.array('file')),
-  async (req, res) => {
-    console.log(`Arquivos recebidos ${req.files.length}`);
-    const statusUpload = req.files.length > 0 ? true : false;
-    res.send({
-      upload: statusUpload,
-      files: req.files,
-    });
-  };
+const upload = multer({ storage: storage });
+
+router.post('/', upload.single('file'), async (req, res) => {
+  res.json({
+    file: req.file,
+  });
+});
 
 module.exports = router;

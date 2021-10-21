@@ -7,6 +7,9 @@ const UsuarioSchema = mongoose.Schema(
     email: { type: String },
     senha: { type: String },
     nivelAcesso: { type: Number },
+    rua: { type: String },
+    numero: { type: Number },
+    bairro: { type: String },
     status: { type: String, enum: ['ativo', 'inativo'], default: 'ativo' },
     foto: {
       originalName: { type: String },

@@ -84,14 +84,13 @@ app.post('/cadastro', async (req, res) => {
 //Autenticação
 app.post('/auth', async (req, res, next) => {
   const usuarios = await Usuario.find();
-
   const usuario = usuarios.find(
     (usuario) =>
-      usuario.email === req.body.email || usuario.senha === req.body.senha,
+      usuario.email === req.body.email || usuario.senha === req.body.password,
   );
   if (!usuario)
     return res.status(400).send('Não foi possível encontrar o usuário!');
-
+    
   try {
     if (
       req.body.email === usuario.email &&
@@ -112,9 +111,11 @@ app.post('/auth', async (req, res, next) => {
           mimetype: usuario.foto.mimetype,
         },
       };
+
       const token = jwt.sign(userAtivo, tokenSecret, {
         expiresIn: 999,
       });
+      
       return res.json({ auth: true, token: token });
     } else {
       return res.status(500).json({ message: 'Login Inválido!' });
@@ -147,7 +148,7 @@ app.post('/logout', function (req, res) {
 app.use('/categorias', rotasCategoria);
 app.use('/produtos', rotasProduto);
 app.use('/pedido', rotasPedido);
-app.use('/usuarios', verificaJWT, rotasUsuario);
+app.use('/usuarios', rotasUsuario);
 app.use('/upload', rotasUpload);
 
 app.use(function (req, res) {

@@ -5,6 +5,8 @@ const ProdutoSchema = mongoose.Schema(
     nome: { type: String, unique: true },
     descricao: {type: String},
     categoria: { type: String },
+    volume: {type: String},
+    teor: {type: String},
     quantidade: { type: Number },
     valor: { type: Number },
     status: { type: String, enum: ['ativo', 'inativo'], default: 'ativo' },

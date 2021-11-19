@@ -59,6 +59,7 @@ function verificaJWT(req, res, next) {
 app.post("/cadastro", async (req, res) => {
   errors = [];
   //Verifica se o usuário já existe
+  console.log(req.body);
   const { nome, cpf, email, senha } = req.body;
   let usuario = await Usuario.findOne({ nome });
   if (usuario)
@@ -105,6 +106,13 @@ app.post("/auth", async (req, res, next) => {
         nivelAcesso: usuario.nivelAcesso,
         status: usuario.status,
         createdAt: usuario.createdAt,
+        rua: usuario.rua,
+        numero: usuario.numero,
+        bairro: usuario.bairro,
+        cidade: usuario.cidade,
+        cep: usuario.cep,
+        telefone: usuario.telefone,
+        dataNascimento: usuario.dataNascimento,
         foto: {
           path: usuario.foto.path,
           originalName: usuario.foto.originalName,
@@ -147,7 +155,7 @@ app.post("/logout", function (req, res) {
 
 app.use("/categorias", rotasCategoria);
 app.use("/produtos", rotasProduto);
-app.use("/pedido", rotasPedido);
+app.use("/pedidos", rotasPedido);
 app.use("/usuarios", rotasUsuario);
 app.use("/upload", rotasUpload);
 

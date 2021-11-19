@@ -1,21 +1,21 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const { check, validationResult } = require("express-validator");
 
-const Pedido = require('../model/Pedido');
+const Pedido = require("../model/Pedido");
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const pedidos = await Pedido.find();
     res.json(pedidos);
   } catch (err) {
     res.status(500).send({
-      errors: [{ message: 'Não foi possível obter os pedidos!' }],
+      errors: [{ message: "Não foi possível obter os pedidos!" }],
     });
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const pedido = await Pedido.findById(req.params.id);
     res.json(pedido);
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 });
 
 //Inclui um novo pedido
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   const errors = [];
   // if (!errors.isEmpty()) {
   //   return res.status(400).json({
@@ -48,6 +48,7 @@ router.post('/', async (req, res) => {
   //   });
   try {
     let pedido = new Pedido(req.body);
+    console.log(req.body);
     await pedido.save();
     res.send(pedido);
   } catch (err) {
@@ -58,7 +59,7 @@ router.post('/', async (req, res) => {
 });
 
 //Deletar um pedido
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   await Pedido.findByIdAndRemove(req.params.id)
     .then((pedido) => {
       res.send({
@@ -77,7 +78,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 //Altera os dados do pedido informado
-router.put('/', async (req, res) => {
+router.put("/", async (req, res) => {
   const errors = validationResult(req);
   let produto = {};
   req.body.produtos.forEach((item) => (produto = item));
@@ -96,7 +97,7 @@ router.put('/', async (req, res) => {
       $set: quantidade,
       $set: preco,
     },
-    { new: true },
+    { new: true }
   )
     .then((pedido) => {
       res.send({

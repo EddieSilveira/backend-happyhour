@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const UsuarioSchema = mongoose.Schema(
   {
@@ -10,7 +10,11 @@ const UsuarioSchema = mongoose.Schema(
     rua: { type: String },
     numero: { type: Number },
     bairro: { type: String },
-    status: { type: String, enum: ['ativo', 'inativo'], default: 'ativo' },
+    cidade: { type: String },
+    telefone: { type: String },
+    dataNascimento: { type: String },
+    cep: { type: String },
+    status: { type: String, enum: ["ativo", "inativo"], default: "ativo" },
     foto: {
       originalName: { type: String },
       path: { type: String },
@@ -18,7 +22,7 @@ const UsuarioSchema = mongoose.Schema(
       mimetype: { type: String },
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-module.exports = mongoose.model('usuario', UsuarioSchema);
+module.exports = mongoose.model("usuario", UsuarioSchema);

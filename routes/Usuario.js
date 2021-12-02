@@ -1,23 +1,23 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const { check, validationResult } = require("express-validator");
 
-const Usuario = require('../model/Usuario');
+const Usuario = require("../model/Usuario");
 
 //Lista todos os usuarios
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const usuario = await Usuario.find();
     res.json(usuario);
   } catch (err) {
     res.status(500).send({
-      errors: [{ message: 'Não foi possível obter os usuários!' }],
+      errors: [{ message: "Não foi possível obter os usuários!" }],
     });
   }
 });
 
 //Lista o usuário pelo Id
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
     res.json(usuario);
@@ -33,20 +33,20 @@ router.get('/:id', async (req, res) => {
 });
 
 const validaUsuario = [
-  check('nome', 'Nome do Usuário é obrigatório').not().isEmpty(),
-  check('cpf', 'CPF do Usuário é obrigatório').not().isEmpty(),
-  check('email', 'Email do usuário é obrigatório').not().isEmpty(),
-  check('email', 'Deve ser um email').isEmail(),
-  check('senha', 'Senha é um campo obrigatório').not().isEmpty(),
-  check('senha', 'A senha deve ter mais de 6 digitos').isLength({ min: 6 }),
-  check('status', 'Informe um status válido para a categoria').isIn([
-    'ativo',
-    'inativo',
+  check("nome", "Nome do Usuário é obrigatório").not().isEmpty(),
+  check("cpf", "CPF do Usuário é obrigatório").not().isEmpty(),
+  check("email", "Email do usuário é obrigatório").not().isEmpty(),
+  check("email", "Deve ser um email").isEmail(),
+  check("senha", "Senha é um campo obrigatório").not().isEmpty(),
+  check("senha", "A senha deve ter mais de 6 digitos").isLength({ min: 6 }),
+  check("status", "Informe um status válido para a categoria").isIn([
+    "ativo",
+    "inativo",
   ]),
 ];
 
 //Inclui uma novo usuário
-router.post('/', validaUsuario, async (req, res) => {
+router.post("/", validaUsuario, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -58,7 +58,7 @@ router.post('/', validaUsuario, async (req, res) => {
   let usuario = await Usuario.findOne({ nome });
   if (usuario)
     return res.status(200).json({
-      errors: [{ message: 'Já existe um usuario com o nome informado' }],
+      errors: [{ message: "Já existe um usuario com o nome informado" }],
     });
   try {
     let usuario = new Usuario(req.body);
@@ -72,7 +72,7 @@ router.post('/', validaUsuario, async (req, res) => {
 });
 
 //Deletar um usuario
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   await Usuario.findByIdAndRemove(req.params.id)
     .then((usuario) => {
       res.send({
@@ -91,20 +91,14 @@ router.delete('/:id', async (req, res) => {
 });
 
 //Altera os dados do usuario informado
-router.put('/', validaUsuario, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array(),
-    });
-  }
+router.put("/", validaUsuario, async (req, res) => {
   let dados = req.body;
   await Usuario.findByIdAndUpdate(
     req.body._id,
     {
       $set: dados,
     },
-    { new: true },
+    { new: true, overwrite: false }
   )
     .then((usuario) => {
       res.send({

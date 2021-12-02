@@ -1,15 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ProdutoSchema = mongoose.Schema(
   {
     nome: { type: String, unique: true },
-    descricao: {type: String},
+    descricao: { type: String },
     categoria: { type: String },
-    volume: {type: String},
-    teor: {type: String},
+    volume: { type: String },
+    teor: { type: String },
     quantidade: { type: Number },
     valor: { type: Number },
-    status: { type: String, enum: ['ativo', 'inativo'], default: 'ativo' },
+    isOferta: { type: Boolean },
+    status: { type: String, enum: ["ativo", "inativo"], default: "ativo" },
     foto: {
       originalName: { type: String },
       path: { type: String },
@@ -17,7 +18,7 @@ const ProdutoSchema = mongoose.Schema(
       mimetype: { type: String },
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-module.exports = mongoose.model('produto', ProdutoSchema);
+module.exports = mongoose.model("produto", ProdutoSchema);

@@ -1,21 +1,22 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const cors = require("cors");
+const { check, validationResult } = require("express-validator");
 
-const Produto = require('../model/Produto');
+const Produto = require("../model/Produto");
 
-router.get('/', async (req, res) => {
+router.get("/", cors(), async (req, res) => {
   try {
     const produtos = await Produto.find();
     res.json(produtos);
   } catch (err) {
     res.status(500).send({
-      errors: [{ message: 'Não foi possível obter os produtos!' }],
+      errors: [{ message: "Não foi possível obter os produtos!" }],
     });
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const produto = await Produto.findById(req.params.id);
     res.json(produto);
@@ -31,18 +32,18 @@ router.get('/:id', async (req, res) => {
 });
 
 const validaProduto = [
-  check('nome', 'Nome do Produto é obrigatório').not().isEmpty(),
-  check('categoria', 'Nome da Categoria é obrigatório').not().isEmpty(),
-  check('quantidade', 'A quantidade é obrigatória').not().isEmpty(),
-  check('valor', 'O valor é obrigatório').not().isEmpty(),
-  check('status', 'Informe um status válido para a categoria').isIn([
-    'ativo',
-    'inativo',
+  check("nome", "Nome do Produto é obrigatório").not().isEmpty(),
+  check("categoria", "Nome da Categoria é obrigatório").not().isEmpty(),
+  check("quantidade", "A quantidade é obrigatória").not().isEmpty(),
+  check("valor", "O valor é obrigatório").not().isEmpty(),
+  check("status", "Informe um status válido para a categoria").isIn([
+    "ativo",
+    "inativo",
   ]),
 ];
 
 //Inclui um novo produto
-router.post('/', validaProduto, async (req, res) => {
+router.post("/", validaProduto, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -54,7 +55,7 @@ router.post('/', validaProduto, async (req, res) => {
   let produto = await Produto.findOne({ nome });
   if (produto)
     return res.status(200).json({
-      errors: [{ message: 'Já existe um produto com o nome informado' }],
+      errors: [{ message: "Já existe um produto com o nome informado" }],
     });
   try {
     let produto = new Produto(req.body);
@@ -68,7 +69,7 @@ router.post('/', validaProduto, async (req, res) => {
 });
 
 //Deletar um produto
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   await Produto.findByIdAndRemove(req.params.id)
     .then((produto) => {
       res.send({
@@ -87,7 +88,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 //Altera os dados do produto informado
-router.put('/', validaProduto, async (req, res) => {
+router.put("/", validaProduto, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -100,7 +101,7 @@ router.put('/', validaProduto, async (req, res) => {
     {
       $set: dados,
     },
-    { new: true },
+    { new: true }
   )
     .then((produto) => {
       res.send({

@@ -3,6 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
 const Pedido = require("../model/Pedido");
+const Produto = require("../model/Produto");
 
 router.get("/", async (req, res) => {
   try {
@@ -48,7 +49,31 @@ router.post("/", async (req, res) => {
   //   });
   try {
     let pedido = new Pedido(req.body);
-    console.log(req.body);
+    let produtos = await Produto.find();
+    let itensPedido = req.body.produtos;
+    let arrayIdItensPedido = itensPedido.map((produto) => {
+      return produto[0];
+    });
+    let arrayQuantidadeProdutos = itensPedido.map((produto) => {
+      return produto[1].quantity;
+    });
+    produtos.map(async (produto) => {
+      arrayIdItensPedido.forEach(async (idProduto, index) => {
+        if (idProduto.includes(produto._id)) {
+          produto.quantidade =
+            produto.quantidade - arrayQuantidadeProdutos[index];
+
+          await Produto.findByIdAndUpdate(
+            produto._id,
+            {
+              $set: produto,
+            },
+            { new: true }
+          );
+        }
+      });
+    });
+
     await pedido.save();
     res.send(pedido);
   } catch (err) {

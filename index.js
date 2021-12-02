@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const tokenSecret = process.env.SECRET;
 const Usuario = require("./model/Usuario");
 
-const rotasCategoria = require("./routes/Categoria");
 const rotasProduto = require("./routes/Produto");
 const rotasUsuario = require("./routes/Usuario");
 const rotasPedido = require("./routes/Pedido");
@@ -17,7 +16,12 @@ const rotasUpload = require("./routes/Upload");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 app.use("/files", express.static(path.resolve(__dirname, "public", "uploads")));
 
 app.use(function (req, res, next) {
@@ -131,29 +135,12 @@ app.post("/auth", async (req, res, next) => {
   } catch (e) {
     res.status(500).send({ message: `Erro ${e}` });
   }
-
-  // usuarios.forEach((usuario) => {
-  //   if (
-  //     req.body.email === usuario.email &&
-  //     req.body.password === usuario.senha
-  //   ) {
-  //     const id = usuario._id;
-  //     const token = jwt.sign({ id }, tokenSecret, {
-  //       expiresIn: 999,
-  //     });
-  //     console.log(usuario)
-  //     return res.json({ auth: true, token: token, usuario: usuario });
-  //   } else {
-  //     return res.status(500).json({ message: 'Login Inválido!' });
-  //   }
-  // });
 });
 
 app.post("/logout", function (req, res) {
   res.json({ auth: false, token: null });
 });
 
-app.use("/categorias", rotasCategoria);
 app.use("/produtos", rotasProduto);
 app.use("/pedidos", rotasPedido);
 app.use("/usuarios", rotasUsuario);

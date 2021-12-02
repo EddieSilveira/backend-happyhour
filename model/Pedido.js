@@ -14,29 +14,11 @@ const PedidoSchema = mongoose.Schema(
       numero: { type: Number },
       bairro: { type: String },
       cidade: { type: String },
-      valorPedido: { type: Number },
+
       valueTroco: { type: Number },
     },
-    produtos: [
-      //  [
-      //   idProduto: {type: String},
-      //   produto: {
-      //     nome: {type: String},
-      //     categoria: {type: String},
-      //     descricao: {type: String},
-      //     quantidade: {type: Number},
-      //     valor: {type: Number},
-      //     volume: {type: String},
-      //     teor: {type: String}
-      //     foto: {
-      //       path: {type: String},
-      //       mimetype: {type: String},
-      //       path: {type: String},
-      //       size: {type: Number}
-      //     }
-      //   }
-      // ]
-    ],
+    produtos: [],
+    valorPedido: { type: Number },
   },
   { timestamps: true }
 );
